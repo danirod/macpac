@@ -1,0 +1,37 @@
+From 0280b15c998cb9dce240eadf4da07be9d54a0457 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dani=20Rodr=C3=ADguez?= <dani@danirod.es>
+Date: Sun, 27 Jul 2025 20:30:51 +0200
+Subject: [PATCH 2/2] Disable checks for being root
+
+---
+ src/pacman/pacman.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/src/pacman/pacman.c b/src/pacman/pacman.c
+index 6b64ffc..41630c3 100644
+--- a/src/pacman/pacman.c
++++ b/src/pacman/pacman.c
+@@ -1117,7 +1117,6 @@ static void cl_to_log(int argc, char *argv[])
+ int main(int argc, char *argv[])
+ {
+ 	int ret = 0;
+-	uid_t myuid = getuid();
+ 
+ 	console_cursor_hide();
+ 	install_segv_handler();
+@@ -1161,12 +1160,6 @@ int main(int argc, char *argv[])
+ 		cleanup(ret);
+ 	}
+ 
+-	/* check if we have sufficient permission for the requested operation */
+-	if(myuid > 0 && needs_root()) {
+-		pm_printf(ALPM_LOG_ERROR, _("you cannot perform this operation unless you are root.\n"));
+-		cleanup(EXIT_FAILURE);
+-	}
+-
+ 	/* we support reading targets from stdin if a cmdline parameter is '-' */
+ 	if(alpm_list_find_str(pm_targets, "-")) {
+ 		if(!isatty(fileno(stdin))) {
+-- 
+2.49.0
+

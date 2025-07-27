@@ -1,0 +1,26 @@
+pkgname=coreutils
+pkgver=9.7
+pkgrel=1
+pkgdesc="The basic file, shell and text manipulation utilities of the GNU operating system."
+arch=(arm64 x86_64)
+url="https://www.gnu.org/software/coreutils"
+license=('GFDL-1.3-or-later' 'GPL-3.0-or-later')
+groups=()
+depends=()
+makedepends=(make)
+checkdepends=()
+optdepends=()
+provides=()
+source=("https://ftp.gnu.org/gnu/coreutils/coreutils-$pkgver.tar.gz")
+b2sums=("a9880809ef9a9054fe5a64b89f1cddecbd2df39bda5bdd052c0cb096f04d66580f53979fdcc59ad9e944c15e2ce1d29a28e95e4cb74ed1fe067c9b49d175025c")
+
+build() {
+	cd "$pkgname-$pkgver"
+	./configure --prefix=/macpac
+	make
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	make DESTDIR="$pkgdir/" install
+}

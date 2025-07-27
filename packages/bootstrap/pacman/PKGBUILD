@@ -1,0 +1,43 @@
+pkgname=pacman
+pkgver=6.1.0
+pkgrel=1
+pkgdesc="A simple library-based package manager"
+arch=(x86_64 arm64)
+url="https://pacman.archlinux.page"
+license=('GPL-2.0-or-later')
+groups=()
+depends=() # bash
+makedepends=() # meson
+checkdepends=()
+optdepends=()
+provides=()
+backup=()
+source=("https://gitlab.archlinux.org/pacman/pacman/-/releases/v$pkgver/downloads/pacman-$pkgver.tar.xz"
+	"0001-Remove-fakeroot.patch"
+	"0002-Disable-checks-for-being-root.patch"
+)
+b2sums=('6d77eb4b737fcd06e06e71f605f8865f5fb44d57442e1e02a63033b38fc329a989a2a39556b7f2bcf2e59d40101ee3912a6351d8d7a07e5205c28431bca2b6e6'
+	    'SKIP'
+            'SKIP')
+
+prepare() {
+	cd "$pkgname-$pkgver"
+	patch -p1 < ../0001-Remove-fakeroot.patch
+	patch -p1 < ../0002-Disable-checks-for-being-root.patch
+}
+
+build() {
+	cd "$pkgname-$pkgver"
+	meson setup build \
+		--prefix=/macpac \
+		--sysconfdir=/macpac/etc \
+		--localstatedir=/macpac/var \
+		-Di18n=false \
+		-Dmakepkg-template-dir=/macpac/share/makepkg-template
+	ninja -C build
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	DESTDIR="$pkgdir" ninja -C build install
+}
