@@ -119,14 +119,16 @@ Then, proceed to compile pacman manually in order to bootstrap it.
   `patch -p1 < $path_to_pacman/0001-*.patch` and `patch -p1 < $path_to_pacman/0002-*.patch`.
 * Compile Pacman using the following options to force Pacman to use a directory of your choice. Here I am using /macpac, but you can use wherever you want:
 
-    meson setup build \
-        --prefix=/macpac \
-        --sysconfdir=/macpac/etc \
-        --localstatedir=/macpac/var \
-        -Di18n=false \
-        -Dmakepkg-template-dir=/macpac/share/makepkg-template
-    ninja -C build
-    ninja -C build install
+```bash
+meson setup build \
+    --prefix=/macpac \
+    --sysconfdir=/macpac/etc \
+    --localstatedir=/macpac/var \
+    -Di18n=false \
+    -Dmakepkg-template-dir=/macpac/share/makepkg-template
+ninja -C build
+ninja -C build install
+```
 
 Remember to change `/macpac` to something else if you are using a different directory.
 
